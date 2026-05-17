@@ -2,7 +2,43 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+## First, install all the dependences:
+
+```bash
+npm install
+```
+
+## Second, setup the database:
+
+1° - Create .env at the FINLY-A3 folder and type:
+
+```
+DATABASE_URL="file:./prisma/dev.db"
+```
+
+2° - Run the following comand to aply the schema and creat the tables:
+
+```bash
+npx prisma db push --schema=prisma/schema.prisma
+
+# to confirm all tables were created run
+
+npx prisma db pull --schema=prisma/schema.prisma
+```
+
+3° - Generate the client Prisma:
+
+```bash
+npx prisma generate
+```
+
+note - If you are having problems to generate the client, ajust the generator in schema.prisma to use:
+
+```
+provider = "prisma-client-js"
+```
+
+## Third, run the development server:
 
 ```bash
 npm run dev
