@@ -20,7 +20,7 @@ export default function SimuladorPage() {
   if (loading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -36,7 +36,7 @@ export default function SimuladorPage() {
       <main className="max-w-2xl mx-auto px-4 py-8">
         <Link
           href="/mapa"
-          className="text-emerald-500 font-medium text-sm hover:underline mb-4 block"
+          className="text-primary font-medium text-sm hover:underline mb-4 block"
         >
           &larr; Voltar ao mapa
         </Link>
