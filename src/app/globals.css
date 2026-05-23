@@ -1,33 +1,163 @@
 @import "tailwindcss";
 
+/* Light Theme (Default) */
 :root {
-  --background: #f8fafc;
-  --foreground: #1e293b;
+	--background: #f8f9fc;
+	--foreground: #1a1d2e;
+	--card: #ffffff;
+	--card-foreground: #1a1d2e;
+	--popover: #ffffff;
+	--popover-foreground: #1a1d2e;
+	--primary: #10b981;
+	--primary-foreground: #ffffff;
+	--secondary: #6366f1;
+	--secondary-foreground: #ffffff;
+	--muted: #e5e7eb;
+	--muted-foreground: #6b7280;
+	--accent: #f59e0b;
+	--accent-foreground: #ffffff;
+	--destructive: #ef4444;
+	--destructive-foreground: #ffffff;
+	--success: #10b981;
+	--success-foreground: #ffffff;
+	--warning: #f59e0b;
+	--warning-foreground: #ffffff;
+	--border: #e5e7eb;
+	--input: #e5e7eb;
+	--input-background: #ffffff;
+	--radius: 1rem;
+}
+
+/* Dark Theme */
+.dark {
+	--background: #0f172a;
+	--foreground: #f1f5f9;
+	--card: #1e293b;
+	--card-foreground: #f1f5f9;
+	--popover: #1e293b;
+	--popover-foreground: #f1f5f9;
+	--primary: #10b981;
+	--primary-foreground: #ffffff;
+	--secondary: #3b82f6;
+	--secondary-foreground: #ffffff;
+	--muted: #334155;
+	--muted-foreground: #94a3b8;
+	--accent: #f59e0b;
+	--accent-foreground: #ffffff;
+	--destructive: #ef4444;
+	--destructive-foreground: #ffffff;
+	--success: #10b981;
+	--success-foreground: #ffffff;
+	--warning: #f59e0b;
+	--warning-foreground: #ffffff;
+	--border: #334155;
+	--input: #334155;
+	--input-background: #1e293b;
+	--radius: 1rem;
+}
+
+/* High Contrast Theme */
+.high-contrast {
+	--background: #000000;
+	--foreground: #ffffff;
+	--card: #000000;
+	--card-foreground: #ffffff;
+	--popover: #000000;
+	--popover-foreground: #ffffff;
+	--primary: #ffff00;
+	--primary-foreground: #000000;
+	--secondary: #00ffff;
+	--secondary-foreground: #000000;
+	--muted: #000000;
+	--muted-foreground: #ffff00;
+	--accent: #ff00ff;
+	--accent-foreground: #000000;
+	--destructive: #ff0000;
+	--destructive-foreground: #ffffff;
+	--success: #00ff00;
+	--success-foreground: #000000;
+	--warning: #ffff00;
+	--warning-foreground: #000000;
+	--border: #ffff00;
+	--input: #ffff00;
+	--input-background: #000000;
+	--radius: 1rem;
+}
+
+/* High Contrast - Additional styling */
+.high-contrast * {
+	border-width: 2px;
+}
+
+.high-contrast button,
+.high-contrast input,
+.high-contrast select,
+.high-contrast textarea {
+	border-width: 3px !important;
+}
+
+.high-contrast a {
+	text-decoration: underline;
+}
+
+.high-contrast svg {
+	filter: drop-shadow(0 0 1px currentColor);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-success: var(--success);
+	--color-success-foreground: var(--success-foreground);
+	--color-warning: var(--warning);
+	--color-warning-foreground: var(--warning-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-input-background: var(--input-background);
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
+	--radius-full: var(--radius);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+	* {
+		@apply border-border;
+	}
+
+	body {
+		@apply bg-background text-foreground;
+		font-feature-settings:
+			"rlig" 1,
+			"calt" 1;
+	}
+
+	html {
+		@apply scroll-smooth;
+	}
 }
 
 @keyframes bounce-slow {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-6px);
+	}
 }
 
 .animate-bounce-slow {
-  animation: bounce-slow 2s ease-in-out infinite;
+	animation: bounce-slow 2s ease-in-out infinite;
 }
