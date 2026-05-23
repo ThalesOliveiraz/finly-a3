@@ -1,5 +1,8 @@
 "use client";
 
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 interface ProgressStarsProps {
 	completedLessons: number;
 	totalLessons: number;
@@ -38,7 +41,14 @@ export default function ProgressStars({
 									: "text-muted-foreground"
 							}`}
 						>
-							{isCompleted ? "⭐" : "☆"}
+							{isCompleted ? (
+								<FontAwesomeIcon
+									icon={faStar}
+									style={{ color: "rgb(255, 212, 59)" }}
+								/>
+							) : (
+								"☆"
+							)}
 						</div>
 					);
 				})}
