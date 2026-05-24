@@ -45,6 +45,8 @@ export async function POST(request: NextRequest) {
         level: user.level,
         streak: user.streak,
         lives: user.lives,
+        livesUpdatedAt: user.livesUpdatedAt,
+        coins: user.coins,
       },
     });
   } catch (err) {

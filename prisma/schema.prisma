@@ -16,6 +16,8 @@ model User {
   level     Int      @default(1)
   streak    Int      @default(0)
   lives     Int      @default(5)
+  livesUpdatedAt DateTime?
+  coins     Int      @default(0)
   lastActiveAt DateTime @default(now())
   createdAt DateTime @default(now())
   progress  Progress[]

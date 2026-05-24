@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { verifyPassword, createToken } from "@/lib/auth";
+import { regenerateLives } from "@/lib/lives";
 import { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -42,9 +43,16 @@ export async function POST(request: NextRequest) {
       newStreak = 1;
     }
 
+    const regen = regenerateLives(user.lives, user.livesUpdatedAt);
+
     await prisma.user.update({
       where: { id: user.id },
-      data: { lastActiveAt: now, streak: newStreak },
+      data: {
+        lastActiveAt: now,
+        streak: newStreak,
+        lives: regen.lives,
+        livesUpdatedAt: regen.livesUpdatedAt,
+      },
     });
 
     const token = createToken(user.id);
@@ -58,7 +66,9 @@ export async function POST(request: NextRequest) {
         xp: user.xp,
         level: user.level,
         streak: newStreak,
-        lives: user.lives,
+        lives: regen.lives,
+        livesUpdatedAt: regen.livesUpdatedAt,
+        coins: user.coins,
       },
     });
   } catch {

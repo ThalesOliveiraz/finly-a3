@@ -6,14 +6,23 @@ import Link from "next/link";
 import { useAuth } from "@/lib/useAuth";
 import Navbar from "@/components/Navbar";
 import QuizGame from "@/components/QuizGame";
+import OutOfLives from "@/components/OutOfLives";
 import { getPhase, getLesson } from "@/data/phases";
 import confetti from "canvas-confetti";
 
 function LicaoContent() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
-	const { user, loading, logout, saveProgress, isLessonCompleted } =
-		useAuth();
+	const {
+		user,
+		loading,
+		logout,
+		saveProgress,
+		isLessonCompleted,
+		fetchUser,
+		loseLife,
+		buyLife,
+	} = useAuth();
 
 	const phaseId = Number(searchParams.get("fase")) || 1;
 	const lessonId = Number(searchParams.get("licao")) || 0;
@@ -152,6 +161,29 @@ function LicaoContent() {
 		);
 	}
 
+	// Single lesson view — bloqueia o quiz se o usuario estiver sem vidas
+	if (user.lives <= 0 && !quizDone) {
+		return (
+			<div className="min-h-screen">
+				<Navbar user={user} onLogout={handleLogout} />
+				<main className="max-w-lg mx-auto px-4 py-8">
+					<Link
+						href={`/licao?fase=${phaseId}`}
+						className="text-primary font-medium text-sm hover:underline mb-4 block"
+					>
+						&larr; Voltar as licoes
+					</Link>
+					<OutOfLives
+						livesUpdatedAt={user.livesUpdatedAt}
+						coins={user.coins}
+						onRegen={fetchUser}
+						onBuy={buyLife}
+					/>
+				</main>
+			</div>
+		);
+	}
+
 	// Single lesson view
 	return (
 		<div className="min-h-screen">
@@ -197,6 +229,7 @@ function LicaoContent() {
 					<QuizGame
 						questions={lesson.questions}
 						onComplete={handleQuizComplete}
+						onWrongAnswer={loseLife}
 					/>
 				)}
 

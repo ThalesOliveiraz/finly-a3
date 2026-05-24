@@ -10,6 +10,8 @@ interface User {
   level: number;
   streak: number;
   lives: number;
+  livesUpdatedAt: string | null;
+  coins: number;
 }
 
 interface Progress {
@@ -122,9 +124,71 @@ export function useAuth() {
     const data = await res.json();
     if (res.ok) {
       setUser((prev) =>
-        prev ? { ...prev, xp: data.totalXp, level: data.level } : null
+        prev
+          ? {
+              ...prev,
+              xp: data.totalXp,
+              level: data.level,
+              coins: data.coins,
+            }
+          : null
       );
       await fetchProgress();
+    }
+    return data;
+  };
+
+  // Perde 1 vida em tempo real (chamado a cada erro no quiz).
+  const loseLife = async () => {
+    const storedToken = localStorage.getItem("finlingo_token");
+    if (!storedToken) return;
+    const res = await fetch("/api/lives", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${storedToken}`,
+      },
+      body: JSON.stringify({ action: "lose" }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              lives: data.lives,
+              livesUpdatedAt: data.livesUpdatedAt ?? null,
+            }
+          : null
+      );
+    }
+    return data;
+  };
+
+  // Compra 1 vida usando moedas.
+  const buyLife = async () => {
+    const storedToken = localStorage.getItem("finlingo_token");
+    if (!storedToken) return;
+    const res = await fetch("/api/lives", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${storedToken}`,
+      },
+      body: JSON.stringify({ action: "buy" }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              lives: data.lives,
+              livesUpdatedAt: data.livesUpdatedAt ?? null,
+              coins: data.coins,
+            }
+          : null
+      );
     }
     return data;
   };
@@ -160,6 +224,8 @@ export function useAuth() {
     register,
     logout,
     saveProgress,
+    loseLife,
+    buyLife,
     fetchProgress,
     fetchUser,
     isLessonCompleted,

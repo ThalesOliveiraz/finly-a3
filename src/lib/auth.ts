@@ -1,6 +1,7 @@
 import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { regenerateLives } from "./lives";
 
 const JWT_SECRET = process.env.NEXTAUTH_SECRET || "finlingo-secret";
 
@@ -27,7 +28,8 @@ export function verifyToken(token: string): { userId: string } | null {
 export async function getUserFromToken(token: string) {
   const payload = verifyToken(token);
   if (!payload) return null;
-  return prisma.user.findUnique({
+
+  const user = await prisma.user.findUnique({
     where: { id: payload.userId },
     select: {
       id: true,
@@ -37,7 +39,24 @@ export async function getUserFromToken(token: string) {
       level: true,
       streak: true,
       lives: true,
+      livesUpdatedAt: true,
+      coins: true,
       lastActiveAt: true,
     },
   });
+  if (!user) return null;
+
+  // Aplica a regeneração de vidas baseada no tempo e persiste se mudou.
+  const regen = regenerateLives(user.lives, user.livesUpdatedAt);
+  if (
+    regen.lives !== user.lives ||
+    regen.livesUpdatedAt?.getTime() !== user.livesUpdatedAt?.getTime()
+  ) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lives: regen.lives, livesUpdatedAt: regen.livesUpdatedAt },
+    });
+  }
+
+  return { ...user, lives: regen.lives, livesUpdatedAt: regen.livesUpdatedAt };
 }

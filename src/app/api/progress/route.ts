@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
+import { COINS_PER_CORRECT } from "@/lib/lives";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -53,12 +54,15 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  // Award XP
+  // Award XP and coins (vidas sao tratadas em tempo real via /api/lives).
   const xpGained = score * 10;
+  const coinsGained = Math.max(score, 0) * COINS_PER_CORRECT;
+
   const user = await prisma.user.update({
     where: { id: payload.userId },
     data: {
       xp: { increment: xpGained },
+      coins: { increment: coinsGained },
       lastActiveAt: new Date(),
     },
   });
@@ -104,5 +108,7 @@ export async function POST(request: NextRequest) {
     xpGained,
     totalXp: user.xp,
     level: newLevel,
+    coinsGained,
+    coins: user.coins,
   });
 }

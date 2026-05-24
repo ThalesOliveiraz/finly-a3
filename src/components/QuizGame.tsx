@@ -14,9 +14,15 @@ interface Question {
 interface QuizGameProps {
 	questions: Question[];
 	onComplete: (score: number) => void;
+	/** Chamado a cada resposta errada para descontar uma vida em tempo real. */
+	onWrongAnswer?: () => void;
 }
 
-export default function QuizGame({ questions, onComplete }: QuizGameProps) {
+export default function QuizGame({
+	questions,
+	onComplete,
+	onWrongAnswer,
+}: QuizGameProps) {
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [selected, setSelected] = useState<string | null>(null);
 	const [showResult, setShowResult] = useState(false);
@@ -36,6 +42,8 @@ export default function QuizGame({ questions, onComplete }: QuizGameProps) {
 		setShowResult(true);
 		if (isCorrect) {
 			setScore((s) => s + 1);
+		} else {
+			onWrongAnswer?.();
 		}
 	};
 
@@ -45,11 +53,9 @@ export default function QuizGame({ questions, onComplete }: QuizGameProps) {
 			setSelected(null);
 			setShowResult(false);
 		} else {
-			const finalScore = score + (isCorrect ? 0 : 0); // score already updated
+			// score ja foi atualizado em handleCheck
 			setFinished(true);
-			onComplete(
-				score + (selected === question.answer && !showResult ? 1 : 0),
-			);
+			onComplete(score);
 		}
 	};
 

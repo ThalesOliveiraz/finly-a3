@@ -7,6 +7,7 @@ import {
 	faArrowRightFromBracket,
 	faBars,
 	faChartColumn,
+	faCoins,
 	faGear,
 	faHeartCircleBolt,
 	faStar,
@@ -20,6 +21,7 @@ interface NavbarProps {
 		level: number;
 		streak: number;
 		lives: number;
+		coins: number;
 	} | null;
 	onLogout: () => void;
 }
@@ -39,6 +41,13 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
 					style={{ color: "rgb(214, 27, 27)" }}
 				/>
 				<span>{user?.lives}</span>
+			</div>
+			<div className="flex items-center gap-1 text-warning font-bold">
+				<FontAwesomeIcon
+					icon={faCoins}
+					style={{ color: "rgb(255, 212, 59)" }}
+				/>
+				<span>{user?.coins}</span>
 			</div>
 			<div className="flex items-center gap-1 text-warning font-bold">
 				<FontAwesomeIcon
